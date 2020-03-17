@@ -13,50 +13,16 @@ const q = new qtnIV();
 const w = new wgld();
 
 // カリング、深度テスト
-gl.depthFunc(gl.LEQUAL);
+// this.gl.depthFunc(this.gl.LEQUAL);
 
 
 //------------------------ 以下自作ライブラリ ------------------------ //
-const uniformMatrix4fv = function (variable, argument) {
-    gl.uniformMatrix4fv(variable, false, argument);
-}
-const uniform1i = function (variable, argument) {
-    gl.uniform1i(variable, argument);
-}
-const uniform1f = function (variable, argument) {
-    gl.uniform1f(variable, argument);
-}
-const uniform2fv = function (variable, argument) {
-    gl.uniform2fv(variable, argument);
-}
-const uniform3fv = function (variable, argument) {
-    gl.uniform3fv(variable, argument);
-}
-const uniform4fv = function (variable, argument) {
-    gl.uniform4fv(variable, argument);
-}
-const attribute = {
-    'position'     : 3,
-    'normal'       : 3,
-    'color'        : 4,
-    'textureCoord' : 2,
-};
-const uniformFunction = {
-    'mat4'      : uniformMatrix4fv,
-    'vec4'      : uniform4fv,
-    'vec3'      : uniform3fv,
-    'vec2'      : uniform2fv,
-    'float'     : uniform1f,
-    'int'       : uniform1i,
-    'sampler2D' : uniform1i,
-    'bool'      : uniform1i,
-}
-
 class shaderManager {
-    constructor (vs, fs) {
+    constructor (gl, vs, fs) {
         // programの作成、使用するattributeとuniformのリスト作成
         const v_shader = w.create_shader(vs);
         const f_shader = w.create_shader(fs);
+        this.gl = gl;
         this.prg = w.create_program(v_shader, f_shader);
         this.cap = [];
         this.attList = [];
@@ -65,6 +31,42 @@ class shaderManager {
         this.uniLocation = {}
         this.uniformFunction = {};
         this.currentInstance = null;
+
+        //--------------------attribute, uniform--------------------//
+        const uniformMatrix4fv = (variable, argument) => {
+            this.gl.uniformMatrix4fv(variable, false, argument);
+        }
+        const uniform1i = (variable, argument) => {
+            this.gl.uniform1i(variable, argument);
+        }
+        const uniform1f = (variable, argument) => {
+            this.gl.uniform1f(variable, argument);
+        }
+        const uniform2fv = (variable, argument) => {
+            this.gl.uniform2fv(variable, argument);
+        }
+        const uniform3fv = (variable, argument) => {
+            this.gl.uniform3fv(variable, argument);
+        }
+        const uniform4fv = (variable, argument) => {
+            this.gl.uniform4fv(variable, argument);
+        }
+        const attribute = {
+            'position'     : 3,
+            'normal'       : 3,
+            'color'        : 4,
+            'textureCoord' : 2,
+        };
+        const uniformFunction = {
+            'mat4'      : uniformMatrix4fv,
+            'vec4'      : uniform4fv,
+            'vec3'      : uniform3fv,
+            'vec2'      : uniform2fv,
+            'float'     : uniform1f,
+            'int'       : uniform1i,
+            'sampler2D' : uniform1i,
+            'bool'      : uniform1i,
+        }
 
         const shaderData = document.getElementById(vs).innerText.split(';').concat(
             document.getElementById(fs).innerText.split(';')
@@ -76,27 +78,27 @@ class shaderManager {
             } else if (text.indexOf('uniform')+1) {
                 key = text.split(' ').slice(-1)[0];
                 funcKey = text.split(' ').filter((e)=>{return e!=''}).slice(-2)[0];
-                this.uniLocation[key] = gl.getUniformLocation(this.prg, key);
+                this.uniLocation[key] = this.gl.getUniformLocation(this.prg, key);
                 this.uniformFunction[key] = uniformFunction[funcKey];
             }
         }
         for (let key of this.attList) {
-            this.attLocation.push(gl.getAttribLocation(this.prg, key));
+            this.attLocation.push(this.gl.getAttribLocation(this.prg, key));
             this.attStride.push(attribute[key]);
         }
     }
     clear (backColor) {
-        gl.clearColor(backColor[0], backColor[1], backColor[2], backColor[3]);
-        gl.clearDepth(1.0);
-        gl.clearStencil(0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+        this.gl.clearColor(backColor[0], backColor[1], backColor[2], backColor[3]);
+        this.gl.clearDepth(1.0);
+        this.gl.clearStencil(0);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
     }
     setCapability (cap) {
         this.cap.push(cap);
     }
     setAttribute (instance, callback) {
         w.set_attribute(instance.VBOList, this.attLocation, this.attStride);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, instance.Index);
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, instance.Index);
 
         this.currentInstance = instance;
         callback();
@@ -108,21 +110,21 @@ class shaderManager {
     }
     drawElement (constant) {
         for (let unit in this.currentInstance.texture) {
-            gl.activeTexture(gl.TEXTURE0 + Number(unit));
-            gl.bindTexture(gl.TEXTURE_2D, this.currentInstance.texture[unit]);
+            this.gl.activeTexture(this.gl.TEXTURE0 + Number(unit));
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.currentInstance.texture[unit]);
         }
 
         for (let cap of this.currentInstance.cap) {
-            gl.enable(cap);
+            this.gl.enable(cap);
         }
 
         for (let cap of this.currentInstance.unCap) {
-            gl.disable(cap);
+            this.gl.disable(cap);
         }
 
         let stencil = this.currentInstance.stencilSetting;
-        gl.stencilFunc(stencil[0], stencil[1], stencil[2]);
-        gl.stencilOp(stencil[3], stencil[4], stencil[5]);
+        this.gl.stencilFunc(stencil[0], stencil[1], stencil[2]);
+        this.gl.stencilOp(stencil[3], stencil[4], stencil[5]);
 
         let argument;
         for (let key in this.currentInstance.uniform) {
@@ -134,21 +136,21 @@ class shaderManager {
                 console.error(e.message);
             }
         }
-        gl.drawElements(constant, this.currentInstance.indexLength, gl.UNSIGNED_SHORT, 0);
+        this.gl.drawElements(constant, this.currentInstance.indexLength, this.gl.UNSIGNED_SHORT, 0);
 
         for (let cap of this.currentInstance.cap) {
-            gl.disable(cap);
+            this.gl.disable(cap);
         }
         for (let cap of this.currentInstance.unCap) {
-            gl.enable(cap);
+            this.gl.enable(cap);
         }
     }
     // drawMergedElements (MergeInstance, constant) {
     //     for (let childMergeInstance of MergeInstance.mergeInstance) {
     //         arguments.callee(childMergeInstance, constant);
     //     }
-    //     gl.activeTexture(gl.TEXTURE0 + MergeInstance.textureUnit);
-    //     gl.bindTexture(gl.TEXTURE_2D, MergeInstance.texture);
+    //     this.gl.activeTexture(this.gl.TEXTURE0 + MergeInstance.textureUnit);
+    //     this.gl.bindTexture(this.gl.TEXTURE_2D, MergeInstance.texture);
 
     //     let argument;
     //     for (let key in MergeInstance.uniform) {
@@ -165,28 +167,27 @@ class shaderManager {
     //         })
     //     }
     // }
-}
 
-switchShader = function (shaderManager, callback) {
-    gl.useProgram(shaderManager.prg);
-    for (let cap of shaderManager.cap) {
-        gl.enable(cap);
+    switchShader (callback) {
+        this.gl.useProgram(this.prg);
+        for (let cap of this.cap) {
+            this.gl.enable(cap);
+        }
+    
+        callback();
+    
+        for (let cap of shaderManager.cap) {
+            this.gl.disable(cap);
+        }
     }
-
-    callback();
-
-    for (let cap of shaderManager.cap) {
-        gl.disable(cap);
+    setFrameBuffer (frameBufferF, callback) {
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, frameBufferF);
+        callback();
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
     }
 }
 
-setFrameBuffer = function (frameBufferF, callback) {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, frameBufferF);
-    callback();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-}
-
-orthographicMatrix = function () {  
+orthographicMatrix = () => {  
     let vMatrix = m.lookAt([0.0, 0.0, 0.5], [0.0, 0.0, 0.0], [0, 1, 0]);
 	let pMatrix = m.ortho(-1.0, 1.0, 1.0, -1.0, 0.1, 1);
     return m.multiply(pMatrix, vMatrix);

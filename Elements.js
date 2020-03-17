@@ -1,5 +1,6 @@
 class Element {
-    constructor () {
+    constructor (gl) {
+        this.gl = gl;
         this.Index;
         this.indexLength;
         this.VBOList = [];
@@ -9,7 +10,7 @@ class Element {
         this.texture = {
             0 : null,
         }
-        this.stencilSetting = [gl.ALWAYS, 1, ~0, gl.KEEP, gl.KEEP, gl.KEEP];
+        this.stencilSetting = [this.gl.ALWAYS, 1, ~0, this.gl.KEEP, this.gl.KEEP, this.gl.KEEP];
         this.colorIndex;
         this.colorLength;
     }
@@ -37,7 +38,7 @@ class Element {
     }
 }
 // class Merge {
-//     constructor () {
+//     constructor (gl, ) {
 //         this.element = {};
 //         this.mergeInstance = [];
 //         this.uniform = {};
@@ -68,8 +69,8 @@ class Element {
 // }
 
 class Point extends Element {
-    constructor(shader, color) {
-        super();
+    constructor(gl, shader, color) {
+        super(gl);
         const dataDictionary = {
             'position'     : w.create_vbo([.0, .0, .0]),
             'normal'       : w.create_vbo([1., 1., 1.]),
@@ -90,8 +91,8 @@ class Point extends Element {
     }
 }
 class Cube extends Element {
-    constructor (shader, color) {
-        super();
+    constructor (gl, shader, color) {
+        super(gl);
         const data = cube(1, color);
         const dataDictionary = {
             'position'     : w.create_vbo(data.p),
@@ -113,8 +114,8 @@ class Cube extends Element {
     }
 }
 class Sphere extends Element {
-    constructor (shader, nVertex, color) {
-        super();
+    constructor (gl, shader, nVertex, color) {
+        super(gl);
         const data = sphere(nVertex, nVertex, 1, color);
         const dataDictionary = {
             'position'     : w.create_vbo(data.p),
@@ -136,8 +137,8 @@ class Sphere extends Element {
     }
 }
 class Torus extends Element {
-    constructor (shader, nVertex, irad, orad, color) {
-        super();
+    constructor (gl, shader, nVertex, irad, orad, color) {
+        super(gl);
         const data = torus(nVertex, nVertex, irad, orad, color);
         const dataDictionary = {
             'position'     : w.create_vbo(data.p),
@@ -158,8 +159,8 @@ class Torus extends Element {
     }
 }
 class Texture extends Element {
-    constructor (shader) {
-        super();
+    constructor (gl, shader) {
+        super(gl);
         const position = [
             -1.0,  1.0,  0.0,
             1.0,  1.0,  0.0,
@@ -194,18 +195,19 @@ class Texture extends Element {
 }
 
 class ImgTexture {
-    constructor (sourcePath) {
+    constructor (gl, sourcePath) {
+        this.gl = gl;
         this.t = null;
         this.changeImg(sourcePath);
     }
     changeImg (sourcePath) {
         let img = new Image();
         img.onload = () => {
-            let tex = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, tex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-            gl.generateMipmap(gl.TEXTURE_2D);
-            gl.bindTexture(gl.TEXTURE_2D, null);
+            let tex = this.gl.createTexture();
+            this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, img);
+            this.gl.generateMipmap(this.gl.TEXTURE_2D);
+            this.gl.bindTexture(this.gl.TEXTURE_2D, null);
 
             this.t = tex;
         };
