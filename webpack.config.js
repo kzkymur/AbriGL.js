@@ -1,22 +1,20 @@
 module.exports = {
     mode: 'development',
-    entry: __dirname + "/init.js", //ビルドするファイル
+    entry: __dirname + "/src/init.js", //ビルドするファイル
     output: {
         path: __dirname, //ビルドしたファイルを吐き出す場所
-        filename: 'smgl.js' //ビルドした後のファイル名
+        filename: 'smgl.js', //ビルドした後のファイル名
+        library: 'smgl',
+        libraryTarget: 'umd',
     },
-      module: {
-      rules: [
-              //loader
-            {
+    module: {
+        rules: [{
             test: /\.js$/,
             loader: 'babel-loader',
             exclude: /node_modules/,
-            query://loaderに渡したいクエリパラメータを指定します
-                {
+            query:{
                 presets: [["@babel/preset-env"]]
-                }
             }
-        ]
+        }]
     }
 };
