@@ -7,11 +7,6 @@ let count = 0;
 
 const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
 
-// ライブラリのインスタンス化
-const m = new matIV();
-const q = new qtnIV();
-const w = new wgld();
-
 // カリング、深度テスト
 // this.gl.depthFunc(this.gl.LEQUAL);
 
@@ -20,10 +15,11 @@ const w = new wgld();
 class shaderManager {
     constructor (gl, vs, fs) {
         // programの作成、使用するattributeとuniformのリスト作成
-        const v_shader = w.create_shader(vs);
-        const f_shader = w.create_shader(fs);
+        const v_shader = this.w.create_shader(vs);
+        const f_shader = this.w.create_shader(fs);
         this.gl = gl;
-        this.prg = w.create_program(v_shader, f_shader);
+        this.w = new wgld(gl);
+        this.prg = this.w.create_program(v_shader, f_shader);
         this.cap = [];
         this.attList = [];
         this.attLocation = [];
@@ -97,7 +93,7 @@ class shaderManager {
         this.cap.push(cap);
     }
     setAttribute (instance, callback) {
-        w.set_attribute(instance.VBOList, this.attLocation, this.attStride);
+        this.w.set_attribute(instance.VBOList, this.attLocation, this.attStride);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, instance.Index);
 
         this.currentInstance = instance;
@@ -167,10 +163,16 @@ class shaderManager {
     //         })
     //     }
     // }
+}
 
-    switchShader (callback) {
-        this.gl.useProgram(this.prg);
-        for (let cap of this.cap) {
+class canvasManager {
+    constructor (gl) {
+        this.gl = gl;
+        this.w = new wgld(gl);
+    }
+    switchShader (shaderManager, callback) {
+        this.gl.useProgram(shaderManager.prg);
+        for (let cap of shaderManager.cap) {
             this.gl.enable(cap);
         }
     
@@ -185,12 +187,9 @@ class shaderManager {
         callback();
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
     }
-}
-
-orthographicMatrix = () => {  
-    let vMatrix = m.lookAt([0.0, 0.0, 0.5], [0.0, 0.0, 0.0], [0, 1, 0]);
-	let pMatrix = m.ortho(-1.0, 1.0, 1.0, -1.0, 0.1, 1);
-    return m.multiply(pMatrix, vMatrix);
+    createFrameBuffer (width, height) {
+        return this.w.create_framebuffer(width, height);
+    }
 }
 
 sum = function (a, b) {
