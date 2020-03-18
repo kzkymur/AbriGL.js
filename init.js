@@ -16,3 +16,5 @@ function smgl (gl) {
         ImgTexture: new ImgTexture(gl),
     }
 }
+
+export {smgl};
