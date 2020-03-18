@@ -1,6 +1,6 @@
-import {shaderManager, canvasManager} from './Setup';
-import {Point, Cube, Sphere, Torus, Texture, ImgTexture} from './Elements';
-import {matIV, qtnIV} from './minMatrixb';
+import {shaderManager, canvasManager} from './src/Setup';
+import {Point, Cube, Sphere, Torus, Texture, ImgTexture} from './src/Elements';
+import {matIV, qtnIV} from './src/minMatrixb';
 
 function smgl (gl) {
     return {
