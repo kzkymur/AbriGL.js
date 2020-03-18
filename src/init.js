@@ -2,7 +2,7 @@ import {shaderManager, canvasManager} from './Setup';
 import {Point, Cube, Sphere, Torus, Texture, ImgTexture} from './Elements';
 import {matIV, qtnIV} from './minMatrixb';
 
-function smgl (gl) {
+exports.smgl = function (gl) {
     return {
         CM: new canvasManager(gl),
         SM: new shaderManager(gl),
@@ -16,5 +16,3 @@ function smgl (gl) {
         ImgTexture: new ImgTexture(gl),
     }
 }
-
-export {smgl};
