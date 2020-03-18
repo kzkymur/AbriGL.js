@@ -1,16 +1,21 @@
 import {shaderManager, canvasManager} from './Setup';
-import * as Elements from './Elements';
+import {Point, Cube, Sphere, Torus, Texture, ImgTexture} from './Elements';
 import {matIV, qtnIV} from './minMatrixb';
 
-const CanvasManager = new canvasManager(gl);
-const ShaderManager = new shaderManager(gl);
+function smgl (gl) {
+    return {
+        CameraManager: new canvasManager(gl),
+        ShaderManager: new shaderManager(gl),
+        Point: new Point(gl),
+        Cube: new Cube(gl),
+        Sphere: new Sphere(gl),
+        Torus: new Torus(gl),
+        Texture: new Texture(gl),
+        ImgTexture: new ImgTexture(gl),
+    }
+}
+
 const m = new matIV();
 const q = new qtnIV();
-const Point = new Elements.Point(gl);
-const Cube = new Elements.Cube(gl);
-const Sphere = new Elements.Sphere(gl);
-const Torus = new Elements.Torus(gl);
-const Texture = new Elements.Texture(gl);
-const ImgTexture = new Elements.ImgTexture(gl);
 
-export {CanvasManager, ShaderManager, m, q, Point, Cube, Sphere, Torus, Texture, ImgTexture};
+export {smgl, m, q};

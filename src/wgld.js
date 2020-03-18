@@ -3,6 +3,7 @@ class wgld {
     constructor (gl) {
         this.gl = gl
     }
+
     create_shader(id){
         // シェーダを格納する変数
         let shader;
@@ -198,3 +199,5 @@ class wgld {
         return {f : frameBuffer, d : depthRenderBuffer, t : fTexture};
     }
 }
+
+export default wgld;

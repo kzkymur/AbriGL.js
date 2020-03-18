@@ -1,10 +1,12 @@
 import wgld from './wgld';
 
 class shaderManager {
-    constructor (gl, vs, fs) {
+    constructor (gl) {
         // programの作成、使用するattributeとuniformのリスト作成
         this.gl = gl;
         this.w = new wgld(gl);
+    }
+    init (vs, fs) {
         const v_shader = this.w.create_shader(vs);
         const f_shader = this.w.create_shader(fs);
 

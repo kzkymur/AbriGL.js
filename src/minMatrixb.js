@@ -371,3 +371,5 @@ function qtnIV(){
         return dest;
     };
 }
+
+export {matIV, qtnIV};
