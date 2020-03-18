@@ -181,34 +181,34 @@ class canvasManager {
     }
 }
 
-sum = function (a, b) {
-    let c = [];
-    for (let i in a) {
-        c.push(a[i]+b[i]);
-    }
-    return c;
-}
-diff = function (a, b) {
-    let c = [];
-    for (let i in a) {
-        c.push(a[i]-b[i]);
-    }
-    return c;
-}
-prod = function (a, b) {
-    let c = [];
-    for (let i in a) {
-        c.push(a[i]*b[i]);
-    }
-}
-quot = function (a, b) {
-    let c = [];
-    for (let i in a) {
-        c.push(a[i]/b[i]);
-    }
-}
-radian = function (degree) {
-    return degree/180*Math.PI;
-}
+// sum = function (a, b) {
+//     let c = [];
+//     for (let i in a) {
+//         c.push(a[i]+b[i]);
+//     }
+//     return c;
+// }
+// diff = function (a, b) {
+//     let c = [];
+//     for (let i in a) {
+//         c.push(a[i]-b[i]);
+//     }
+//     return c;
+// }
+// prod = function (a, b) {
+//     let c = [];
+//     for (let i in a) {
+//         c.push(a[i]*b[i]);
+//     }
+// }
+// quot = function (a, b) {
+//     let c = [];
+//     for (let i in a) {
+//         c.push(a[i]/b[i]);
+//     }
+// }
+// radian = function (degree) {
+//     return degree/180*Math.PI;
+// }
 
 export {shaderManager, canvasManager};
