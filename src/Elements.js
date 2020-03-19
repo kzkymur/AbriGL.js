@@ -91,7 +91,7 @@ class Point extends Element {
         this.colorLength = 1;
         this.indexLength = 1;
         this.Index = this.w.create_ibo([0]);
-        return this;
+        return Object.assign({}, this);
     }
 }
 class Cube extends Element {
@@ -117,7 +117,7 @@ class Cube extends Element {
         this.colorLength = data.p.length/3;
         this.indexLength = data.i.length;
         this.Index = this.w.create_ibo(data.i);
-        return this;
+        return Object.assign({}, this);
     }
 }
 class Sphere extends Element {
@@ -143,7 +143,7 @@ class Sphere extends Element {
         this.colorLength = data.p.length/3;
         this.indexLength = data.i.length;
         this.Index = this.w.create_ibo(data.i);
-        return this
+        return Object.assign({}, this);
     }
 }
 class Torus extends Element {
@@ -168,7 +168,7 @@ class Torus extends Element {
         }
         this.indexLength = data.i.length;
         this.Index = this.w.create_ibo(data.i);
-        return this
+        return Object.assign({}, this);
     }
 }
 class Texture extends Element {
@@ -206,7 +206,7 @@ class Texture extends Element {
         }
         this.indexLength = index.length;
         this.Index = this.w.create_ibo(index);
-        return this;
+        return Object.assign({}, this);
     }
 }
 
@@ -217,7 +217,7 @@ class ImgTexture {
     init (sourcePath) {
         this.t = null;
         this.changeImg(sourcePath);
-        return this;
+        return Object.assign({}, this);
     }
     changeImg (sourcePath) {
         let img = new Image();
@@ -375,4 +375,4 @@ const hsva = function (h, s, v, a) {
     return color;
 }
 
-export {Point, Cube, Sphere, Torus, Texture, ImgTexture};
+export {Point, Cube, Sphere, Torus, Texture, ImgTexture, hsva};

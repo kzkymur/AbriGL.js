@@ -4,12 +4,12 @@ class wgld {
         this.gl = gl
     }
 
-    create_shader(id){
+    create_shader(scriptElement){
         // シェーダを格納する変数
         let shader;
 
         // HTMLからscriptタグへの参照を取得
-        let scriptElement = document.getElementById(id);
+        // let scriptElement = document.getElementById(id);
 
         // scriptタグが存在しない場合は抜ける
         if(!scriptElement){return;}

@@ -1,10 +1,10 @@
 import {shaderManager, canvasManager} from './Setup';
-import {Point, Cube, Sphere, Torus, Texture, ImgTexture} from './Elements';
+import {Point, Cube, Sphere, Torus, Texture, ImgTexture, hsva} from './Elements';
 import {matIV, qtnIV} from './minMatrixb';
 
 function smgl (gl) {
     return {
-        CameraManager: new canvasManager(gl),
+        CanvasManager: new canvasManager(gl),
         ShaderManager: new shaderManager(gl),
         Point: new Point(gl),
         Cube: new Cube(gl),
@@ -18,4 +18,4 @@ function smgl (gl) {
 const m = new matIV();
 const q = new qtnIV();
 
-export {smgl, m, q};
+export {smgl, m, q, hsva};

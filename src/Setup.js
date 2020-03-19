@@ -55,9 +55,7 @@ class shaderManager {
             'bool'      : uniform1i,
         }
 
-        const shaderData = document.getElementById(vs).innerText.split(';').concat(
-            document.getElementById(fs).innerText.split(';')
-        )
+        const shaderData = vs.text.split(';').concat(fs.text.split(';'))
         let key, funcKey;
         for (let text of shaderData) {
             if (text.indexOf('attribute')+1) {
@@ -73,6 +71,7 @@ class shaderManager {
             this.attLocation.push(this.gl.getAttribLocation(this.prg, key));
             this.attStride.push(attribute[key]);
         }
+        return Object.assign({}, this);
     }
     clear (backColor) {
         this.gl.clearColor(backColor[0], backColor[1], backColor[2], backColor[3]);
@@ -160,6 +159,9 @@ class canvasManager {
     constructor (gl) {
         this.gl = gl;
         this.w = new wgld(gl);
+    }
+    init () {
+        return Object.assign({}, this);
     }
     switchShader (shaderManager, callback) {
         this.gl.useProgram(shaderManager.prg);
