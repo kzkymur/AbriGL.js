@@ -3,7 +3,7 @@ module.exports = {
     entry: __dirname + "/src/init.js", //ビルドするファイル
     output: {
         path: __dirname, //ビルドしたファイルを吐き出す場所
-        filename: 'main.js', //ビルドした後のファイル名 //[name]でentryが{key, name}の時のkeyを代入できる
+        filename: 'abrigl.js', //ビルドした後のファイル名 //[name]でentryが{key, name}の時のkeyを代入できる
         library: 'AbriGL',
         libraryTarget: 'umd',
     },
