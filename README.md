@@ -80,13 +80,13 @@ function render () {
 		canvasM.switchShader(shaderM, (s)=>{
 			s.clear([0.0, 0.0, 0.0, 1.0]);
 			sphere.setUniform('mMatrix', mMatrix);
-      		// setAttribute(object, callback)の callback 内で shaderM.drawElement を行う。
-      		// attrubute として
-      		// attribute vec3 position;
-      		// attribute vec3 normal;
-      		// attribute vec4 color;
-      		// attribute vec2 textureCoord;
-      		// をサポート
+      				// setAttribute(object, callback)の callback 内で shaderM.drawElement を行う。
+      				// attrubute として
+      				// attribute vec3 position;
+      				// attribute vec3 normal;
+      				// attribute vec4 color;
+              // attribute vec2 textureCoord;
+              // をサポート
 			s.setAttribute(sphere, ()=>{
 				s.drawElement(s.gl.TRIANGLES);
 			});
