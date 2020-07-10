@@ -62,7 +62,7 @@ const sphere = abrigl.Sphere.init(shaderM, 64, [1,1,1,1]); // 第一引数はsha
 // テクスチャはこんな感じで貼る
 abrigl.ImgTexture.init('./sample.png').then(res=>{
 	sphere.setTexture(0, res.t); // 第一引数はunit
-  // setUniform は オブジェクト, shaderM の両方に可能
+  	// setUniform は オブジェクト, shaderM の両方に可能
 	sphere.setUniform('texture', 0);
 });
 
@@ -74,19 +74,19 @@ shaderM.setUniform('tmpMatrix', m.multiply(pMatrix, vMatrix));
 
 function render () {
 	mMatrix = m.rotate(mMatrix, 1/200, [0, 1, 0]);
-  // frameBuffer に書く場合は、fb = canvasM.createFrameBuffer(int width, int height) を作成し
-  // 第一引数に fb.f を入れる。frameBuffer を使う場合は Object.setTexture(unit, fb.t);
+  	// frameBuffer に書く場合は、fb = canvasM.createFrameBuffer(int width, int height) を作成し
+  	// 第一引数に fb.f を入れる。frameBuffer を使う場合は Object.setTexture(unit, fb.t);
 	canvasM.setFrameBuffer(null, ()=>{
 		canvasM.switchShader(shaderM, (s)=>{
 			s.clear([0.0, 0.0, 0.0, 1.0]);
 			sphere.setUniform('mMatrix', mMatrix);
-      // setAttribute(object, callback)の callback 内で shaderM.drawElement を行う。
-      // attrubute として
-      // attribute vec3 position;
-      // attribute vec3 normal;
-      // attribute vec4 color;
-      // attribute vec2 textureCoord;
-      // をサポート
+      		// setAttribute(object, callback)の callback 内で shaderM.drawElement を行う。
+      		// attrubute として
+      		// attribute vec3 position;
+      		// attribute vec3 normal;
+      		// attribute vec4 color;
+      		// attribute vec2 textureCoord;
+      		// をサポート
 			s.setAttribute(sphere, ()=>{
 				s.drawElement(s.gl.TRIANGLES);
 			});
