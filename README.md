@@ -30,5 +30,5 @@ const abrigl = new AbriGL();
 
 ## Example
 
-[example.html](https://kzkymur.com/Abrigl/sample.html)
+[example.html](https://kzkymur.com/AbriGL/sample.html)
 
