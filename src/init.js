@@ -1,4 +1,4 @@
-import {shaderManager, canvasManager} from './Setup.js';
+import {shaderManager, canvasManager} from './Managers.js';
 import {Point, Cube, Sphere, Torus, Texture, ImgTexture, hsva} from './Elements.js';
 import {matIV, qtnIV} from './minMatrixb.js';
 
