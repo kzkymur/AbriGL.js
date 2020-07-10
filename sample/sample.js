@@ -32,7 +32,6 @@ const canvas = document.getElementById('canvas');
 canvas.width = 512;
 canvas.height = 512;
 const gl = canvas.getContext('webgl');
-const fps = 60;
 
 const abrigl = new AbriGL(gl);
 const m = abrigl.m;
@@ -64,5 +63,6 @@ function render () {
 			});
 		})
 	})
+	requestAnimationFrame(render);
 }
-setInterval(render, 1000/fps);
+requestAnimationFrame(render);
