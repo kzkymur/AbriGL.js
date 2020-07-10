@@ -4,39 +4,52 @@ class wgld {
         this.gl = gl
     }
 
-    create_shader(scriptElement){
+    create_vs(scriptElement){
         // シェーダを格納する変数
         let shader;
 
         // HTMLからscriptタグへの参照を取得
         // let scriptElement = document.getElementById(id);
 
-        // scriptタグが存在しない場合は抜ける
-        if(!scriptElement){return;}
-
         // scriptタグのtype属性をチェック
-        switch(scriptElement.type){
+		// 頂点シェーダの場合
+		shader = this.gl.createShader(this.gl.VERTEX_SHADER);
 
-            // 頂点シェーダの場合
-            case 'x-shader/x-vertex':
-                shader = this.gl.createShader(this.gl.VERTEX_SHADER);
-                break;
-
-            // フラグメントシェーダの場合
-            case 'x-shader/x-fragment':
-                shader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
-                break;
-            default :
-                return;
-        }
-
-        // 生成されたシェーダにソースを割り当てる
-        this.gl.shaderSource(shader, scriptElement.text);
+		// 生成されたシェーダにソースを割り当てる
+		this.gl.shaderSource(shader, scriptElement);
 
         // シェーダをコンパイルする
         this.gl.compileShader(shader);
 
         // シェーダが正しくコンパイルされたかチェック
+        if(this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)){
+
+            // 成功していたらシェーダを返して終了
+            return shader;
+        }else{
+
+            // 失敗していたらエラーログをアラートする
+            alert(this.gl.getShaderInfoLog(shader));
+        }
+    }
+
+    create_fs(scriptElement){
+        // シェーダを格納する変数
+        let shader;
+
+        // HTMLからscriptタグへの参照を取得
+        // let scriptElement = document.getElementById(id);
+
+		// フラグメントシェーダの場合
+		shader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
+
+		// 生成されたシェーダにソースを割り当てる
+		this.gl.shaderSource(shader, scriptElement);
+
+		// シェーダをコンパイルする
+		this.gl.compileShader(shader);
+
+		// シェーダが正しくコンパイルされたかチェック
         if(this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)){
 
             // 成功していたらシェーダを返して終了

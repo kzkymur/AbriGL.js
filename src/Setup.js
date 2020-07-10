@@ -1,4 +1,4 @@
-import wgld from './wgld';
+import wgld from './wgld.js';
 
 class shaderManager {
     constructor (gl) {
@@ -7,8 +7,8 @@ class shaderManager {
         this.w = new wgld(gl);
     }
     init (vs, fs) {
-        const v_shader = this.w.create_shader(vs);
-        const f_shader = this.w.create_shader(fs);
+        const v_shader = this.w.create_vs(vs);
+        const f_shader = this.w.create_fs(fs);
 
         this.prg = this.w.create_program(v_shader, f_shader);
         this.cap = [];
@@ -55,7 +55,7 @@ class shaderManager {
             'bool'      : uniform1i,
         }
 
-        const shaderData = vs.text.split(';').concat(fs.text.split(';'))
+		const shaderData = vs.split(';').concat(fs.split(';'));
         let key, funcKey;
         for (let text of shaderData) {
             if (text.indexOf('attribute')+1) {
@@ -71,7 +71,7 @@ class shaderManager {
             this.attLocation.push(this.gl.getAttribLocation(this.prg, key));
             this.attStride.push(attribute[key]);
         }
-        return Object.assign({}, this);
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
     clear (backColor) {
         this.gl.clearColor(backColor[0], backColor[1], backColor[2], backColor[3]);
@@ -87,7 +87,7 @@ class shaderManager {
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, instance.Index);
 
         this.currentInstance = instance;
-        callback();
+        callback(instance);
         
         this.currentInstance = null;
     }
@@ -161,7 +161,7 @@ class canvasManager {
         this.w = new wgld(gl);
     }
     init () {
-        return Object.assign({}, this);
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
     switchShader (shaderManager, callback) {
         this.gl.useProgram(shaderManager.prg);
@@ -169,7 +169,7 @@ class canvasManager {
             this.gl.enable(cap);
         }
     
-        callback();
+        callback(shaderManager);
     
         for (let cap of shaderManager.cap) {
             this.gl.disable(cap);

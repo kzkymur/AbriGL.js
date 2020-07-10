@@ -91,7 +91,7 @@ class Point extends Element {
         this.colorLength = 1;
         this.indexLength = 1;
         this.Index = this.w.create_ibo([0]);
-        return Object.assign({}, this);
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
 }
 class Cube extends Element {
@@ -117,7 +117,7 @@ class Cube extends Element {
         this.colorLength = data.p.length/3;
         this.indexLength = data.i.length;
         this.Index = this.w.create_ibo(data.i);
-        return Object.assign({}, this);
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
 }
 class Sphere extends Element {
@@ -143,7 +143,7 @@ class Sphere extends Element {
         this.colorLength = data.p.length/3;
         this.indexLength = data.i.length;
         this.Index = this.w.create_ibo(data.i);
-        return Object.assign({}, this);
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
 }
 class Torus extends Element {
@@ -168,7 +168,7 @@ class Torus extends Element {
         }
         this.indexLength = data.i.length;
         this.Index = this.w.create_ibo(data.i);
-        return Object.assign({}, this);
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
 }
 class Texture extends Element {
@@ -206,7 +206,7 @@ class Texture extends Element {
         }
         this.indexLength = index.length;
         this.Index = this.w.create_ibo(index);
-        return Object.assign({}, this);
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
 }
 
@@ -216,22 +216,25 @@ class ImgTexture {
     }
     init (sourcePath) {
         this.t = null;
-        this.changeImg(sourcePath);
-        return Object.assign({}, this);
+        return this.changeImg(sourcePath);
     }
-    changeImg (sourcePath) {
-        let img = new Image();
-        img.onload = () => {
-            let tex = this.gl.createTexture();
-            this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, img);
-            this.gl.generateMipmap(this.gl.TEXTURE_2D);
-            this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+	changeImg (sourcePath) {
+		return new Promise((resolve, reject) => {
+			const img = new Image();
+			img.onload = () => resolve(img);
+			img.onerror = (e) => reject(e);
+			img.src = sourcePath;
+		}).then(res => {
+			let tex = this.gl.createTexture();
+			this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+			this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, res);
+			this.gl.generateMipmap(this.gl.TEXTURE_2D);
+			this.gl.bindTexture(this.gl.TEXTURE_2D, null);
 
-            this.t = tex;
-        };
-        img.src = sourcePath;
-    }
+			this.t = tex;
+			return this;
+		});
+	}
 }
 
 const torus = function (row, column, irad, orad, color){
@@ -248,8 +251,9 @@ const torus = function (row, column, irad, orad, color){
             let tz = (rr * irad + orad) * Math.sin(tr);
             let rx = rr * Math.cos(tr);
             let rz = rr * Math.sin(tr);
+			let tc;
             if(color){
-                let tc = color;
+                 tc = color;
             }else{
                 tc = hsva(360 / column * ii, 1, 1, 1);
             }
@@ -263,9 +267,9 @@ const torus = function (row, column, irad, orad, color){
             st.push(rs, rt);
         }
     }
-    for(i = 0; i < row; i++){
-        for(ii = 0; ii < column; ii++){
-            r = (column + 1) * i + ii;
+    for(let i = 0; i < row; i++){
+        for(let ii = 0; ii < column; ii++){
+            let r = (column + 1) * i + ii;
             idx.push(r, r + column + 1, r + 1);
             idx.push(r + column + 1, r + column + 2, r + 1);
         }
@@ -298,9 +302,9 @@ const sphere = function (row, column, rad, color){
             st.push(1 - 1 / column * ii, 1 / row * i);
         }
     }
-    r = 0;
-    for(i = 0; i < row; i++){
-        for(ii = 0; ii < column; ii++){
+    let r = 0;
+    for(let i = 0; i < row; i++){
+        for(let ii = 0; ii < column; ii++){
             r = (column + 1) * i + ii;
             idx.push(r, r + 1, r + column + 2);
             idx.push(r, r + column + 2, r + column + 1);
