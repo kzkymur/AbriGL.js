@@ -2,6 +2,8 @@
 
 WebGLの記述量を端折る(Abridge)ためのjsライブラリです。
 
+This is a javacsript library to abridge WebGL code.
+
 
 
 ## Install
